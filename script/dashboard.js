@@ -883,6 +883,80 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Attach event listener for opening Gift Suggestion Modal from feature card
+  const featureGiftSuggestionCard = document.getElementById(
+    "featureGiftSuggestionCard"
+  );
+
+  if (featureGiftSuggestionCard) {
+    featureGiftSuggestionCard.addEventListener("click", function () {
+      showGiftSuggestionModal();
+    });
+  }
+
+  // Modal Gợi Ý Quà Tặng
+  function showGiftSuggestionModal() {
+    let modal = document.getElementById("giftSuggestionModal");
+    if (!modal) {
+      // Nếu chưa có modal trong DOM, tạo mới
+      modal = document.createElement("div");
+      modal.className = "modal";
+      modal.id = "giftSuggestionModal";
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close-modal" id="closeGiftSuggestionModal" style="cursor:pointer;font-size:24px;float:right">&times;</span>
+          </div>
+          <div class="modal-body">
+            <div class="modal-icon" style="text-align:center;margin-bottom:16px;">
+              <img src="https://cdn-icons-png.flaticon.com/512/1828/1828961.png" alt="gift" class="heart-icon" style="width:60px;"/>
+            </div>
+            <h3>Bạn sẽ được điều hướng đến nơi có thể tìm thấy quà tặng phù hợp cho bạn</h3>
+            <p>Bạn có muốn tiếp tục không?</p>
+            <div class="modal-buttons" style="display:flex;gap:12px;justify-content:center;margin-top:20px;">
+              <button class="btn primary" id="goToEcommerceBtn">Đi đến sàn quà tặng</button>
+              <button class="btn secondary" id="cancelGiftSuggestionBtn">Hủy</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    modal.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+    // Đóng modal khi bấm nút đóng hoặc Hủy
+    document.getElementById("closeGiftSuggestionModal").onclick =
+      hideGiftSuggestionModal;
+    document.getElementById("cancelGiftSuggestionBtn").onclick =
+      hideGiftSuggestionModal;
+    // Điều hướng khi bấm nút đi đến sàn quà tặng
+    document.getElementById("goToEcommerceBtn").onclick = function () {
+      window.open(
+        "https://shopee.vn/search?keyword=qu%C3%A0%20t%E1%BA%B7ng%20c%E1%BA%B7p%20%C4%91%C3%B4i",
+        "_blank"
+      );
+      hideGiftSuggestionModal();
+    };
+    // Đóng modal khi click ra ngoài
+    modal.onclick = function (e) {
+      if (e.target === modal) hideGiftSuggestionModal();
+    };
+    // Đóng modal bằng phím ESC
+    document.addEventListener("keydown", escGiftModalHandler);
+  }
+  function hideGiftSuggestionModal() {
+    const modal = document.getElementById("giftSuggestionModal");
+    if (modal) {
+      modal.classList.remove("show");
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", escGiftModalHandler);
+    }
+  }
+  function escGiftModalHandler(e) {
+    if (e.key === "Escape") hideGiftSuggestionModal();
+  }
+
   // Itinerary Modal Elements
   const itineraryModal = document.getElementById("itineraryModal");
   const closeItineraryModalBtn = document.getElementById("closeItineraryModal");
@@ -1159,6 +1233,16 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Share data:", data);
         showShareModal(data);
       });
+    });
+
+    // Gán sự kiện cho cả phần dưới (Tính Năng Nổi Bật)
+    const allGiftCards = Array.from(document.querySelectorAll(".feature-card"));
+    allGiftCards.forEach((card) => {
+      const name = card.querySelector(".feature-name");
+      if (name && name.textContent.trim() === "Gợi Ý Quà Tặng") {
+        card.style.cursor = "pointer";
+        card.addEventListener("click", showGiftSuggestionModal);
+      }
     });
   };
 });
