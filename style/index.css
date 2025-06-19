@@ -3,7 +3,7 @@ body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
   color: #222;
-  background: url("/assets/icons/img/ảnh index_html.jpg") center center/cover
+  background: url("assets/icons/img/anh_index_html.jpg") center center/cover
     no-repeat fixed;
   min-height: 100vh;
 }
